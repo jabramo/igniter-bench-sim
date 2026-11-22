@@ -68,7 +68,8 @@ export const ABORT_LIMITS = {
   tBodyMaxC: 180.0,
   mALowFault: 3.6,             // Broken 4-20 mA wire
   mAHighFault: 21.0,           // Shorted 4-20 mA loop
-  gpPowerWindowSec: 0.5,       // Power in [Pmin, Pmax] for full last 0.5 s
+  gpPowerWindowSec: 0.5,       // Power in [Pmin, Pmax] with V at setpoint for full last 0.5 s
+  gpVSetpointTol: 0.03,        // V within 3% of setpoint = PSU out of current limit
   gpPowerAvgSec: 0.1,          // 100 ms moving average
   etherCatWatchdogMs: 20,
 };

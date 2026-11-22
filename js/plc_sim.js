@@ -487,7 +487,8 @@ export class IgniterBenchSim {
     this.gpPowerAvg = this.gpPowerSum / 100;
 
     if (this.state === STATES.GP_HEAT) {
-      if (this.gpPowerAvg >= this.settings.pMin && this.gpPowerAvg <= this.settings.pMax && this.gpR > 0.3 && this.gpR < 15) {
+      const vAtSetpoint = Math.abs(this.gpV - this.settings.vGp) <= ABORT_LIMITS.gpVSetpointTol * this.settings.vGp;
+      if (this.gpPowerAvg >= this.settings.pMin && this.gpPowerAvg <= this.settings.pMax && vAtSetpoint && this.gpR > 0.3 && this.gpR < 15) {
         this.gpInRangeMs += 1;
       } else {
         this.gpInRangeMs = 0;
@@ -698,17 +699,17 @@ export class IgniterBenchSim {
           return;
         }
         if (elapsedInState >= this.settings.t1) {
-          // Check glow plug power in [Pmin, Pmax] for full last 0.5 s (Section 7.5)
+          // Check glow plug power in [Pmin, Pmax] with V at setpoint for full last 0.5 s (Section 7.5)
           if (this.gpInRangeMs >= ABORT_LIMITS.gpPowerWindowSec * 1000) {
             this.gpOkLatched = true;
             this.t0Time = this.simTime;
-            this._logEvent(`T0: GP power latched OK (${this.gpPowerAvg.toFixed(1)} W in [${this.settings.pMin}, ${this.settings.pMax}] W)`);
+            this._logEvent(`T0: GP power latched OK (${this.gpPowerAvg.toFixed(1)} W in [${this.settings.pMin}, ${this.settings.pMax}] W, V = ${this.gpV.toFixed(1)} V at setpoint)`);
             this._enterState(STATES.OX_OPEN);
             this._logEvent('OX_OPEN: SV-201 (GOX) commanded OPEN');
           } else {
             // Clean no-go (Section 7.5 & 12b) — valves NEVER commanded
             this.gpOkLatched = false;
-            this.noGoReason = `GP power out of range at T0 (${this.gpPowerAvg.toFixed(1)} W vs [${this.settings.pMin}, ${this.settings.pMax}] W) — Clean No-Go`;
+            this.noGoReason = `GP power or V out of range at T0 (${this.gpPowerAvg.toFixed(1)} W vs [${this.settings.pMin}, ${this.settings.pMax}] W, V = ${this.gpV.toFixed(1)} V vs ${this.settings.vGp} V setpoint) — Clean No-Go`;
             if (this.currentRunData) {
               this.currentRunData.outcome = 'NO-GO';
               this.currentRunData.noGoReason = this.noGoReason;
@@ -850,8 +851,17 @@ export class IgniterBenchSim {
     this.gpR = rCold + (rHot - rCold) * this.gpTempNorm;
 
     if (this.gpActuallyPowered) {
-      this.gpV = this.settings.vGp + randn() * 0.03;
-      this.gpI = clamp(this.gpV / this.gpR, 0, 20.0); // Programmable PSU current limit (20 A)
+      // Constant-current limit: a cold plug that would draw more than 20 A pulls the supply out of
+      // its voltage setpoint (V = I_lim * R). The T0 go check requires V back at setpoint.
+      const iLim = 20.0;
+      const vSet = this.settings.vGp + randn() * 0.03;
+      if (vSet / this.gpR > iLim) {
+        this.gpI = iLim;
+        this.gpV = iLim * this.gpR;
+      } else {
+        this.gpV = vSet;
+        this.gpI = vSet / this.gpR;
+      }
       this.gpP = this.gpV * this.gpI;
       this.gpTempNorm = clamp(this.gpTempNorm + (1 - this.gpTempNorm) * (dt / 0.55), 0, 1);
     } else {

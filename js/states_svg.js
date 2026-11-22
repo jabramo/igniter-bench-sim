@@ -33,7 +33,7 @@ export function renderStatesSvg(container) {
 
       <line id="trGp" x1="478" y1="78" x2="538" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
       <text x="508" y="59" text-anchor="middle" class="st-lbl">t1 done,</text>
-      <text x="508" y="70" text-anchor="middle" class="st-lbl">power OK</text>
+      <text x="508" y="70" text-anchor="middle" class="st-lbl">power + V OK</text>
 
       <line id="trOx" x1="656" y1="78" x2="710" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
       <text x="683" y="59" text-anchor="middle" class="st-lbl">t2 done,</text>
@@ -48,7 +48,7 @@ export function renderStatesSvg(container) {
 
       <!-- Amber no-go path: GP_HEAT -> SHUTDOWN -->
       <path id="trNoGo" d="M 442 104 L 442 134 L 1112 134 L 1112 106" fill="none" stroke="#A66B00" stroke-width="1.6" marker-end="url(#stArrAmber)"/>
-      <text x="1026" y="148" text-anchor="middle" class="st-lbl" fill="#9E5E00">glow plug power out of range at T0: no-go</text>
+      <text x="1026" y="148" text-anchor="middle" class="st-lbl" fill="#9E5E00">glow plug power or V out of range at T0: no-go</text>
 
       <!-- Red abort collector bus from COUNTDOWN, GP_HEAT, OX_OPEN, IGN_WAIT, BURN -> ABORT -->
       <g id="trAbortBus" stroke="#B3261E" stroke-width="1.5" fill="none">
