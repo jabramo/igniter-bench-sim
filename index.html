@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GOX / GCH4 Igniter Test Bench — Controls &amp; DAQ Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- SIMPLE ACCESS GATE -->
+  <div id="authGate" class="auth-gate">
+    <form id="authForm" class="auth-card" autocomplete="off">
+      <div class="auth-brand">
+        <div class="brand-mark">IGN</div>
+        <div>
+          <h1>GOX / GCH<sub>4</sub> Igniter Test Bench</h1>
+          <p class="brand-sub">Controls &amp; DAQ Interactive Demo</p>
+        </div>
+      </div>
+      <p class="auth-prompt">Enter the access code provided with the design report to open the simulation.</p>
+      <input id="authInput" type="password" class="auth-input" placeholder="Access code" autofocus required />
+      <div id="authError" class="auth-error hidden">Incorrect access code. Please try again.</div>
+      <button type="submit" class="btn btn-start auth-submit">Open Simulation</button>
+    </form>
+  </div>
+
+  <!-- MAIN APPLICATION SHELL (hidden until unlocked) -->
+  <div id="appRoot" class="hidden">
+  <!-- TOP STATUS HEADER -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">IGN</div>
+      <div>
+        <h1>GOX / GCH<sub>4</sub> Igniter Test Bench</h1>
+        <p class="brand-sub">Beckhoff CX5330 PLC (1 kHz) &middot; NI cDAQ-9189 FlexLogger</p>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <div class="clock-readout">
+        <span class="clock-lbl" id="lblClockMode">PLC 1 kHz</span>
+        <span class="clock-val" id="valClock">READY</span>
+      </div>
+      <div class="rec-pill" id="recPill"><span class="rec-dot"></span>REC</div>
+      <div class="state-pill state-safe" id="hdrState">SAFE</div>
+    </div>
+  </header>
+
+  <!-- MAIN SINGLE-PAGE WORKSPACE -->
+  <div class="workspace">
+    <!-- STICKY LEFT OPERATOR PANEL -->
+    <aside class="operator-rail">
+      <section class="panel panel-hardware">
+        <div class="panel-head">
+          <h2>Operator Panel</h2>
+          <span class="hw-tag">HARDWIRED</span>
+        </div>
+
+        <!-- 3-Position ARM Key Switch -->
+        <div class="control-block">
+          <div class="block-label-row">
+            <label>ARM Key Switch</label>
+          </div>
+          <div class="key-switch key-switch-2" role="group" aria-label="ARM Key Position">
+            <button class="key-pos active" data-key="SAFE">SAFE</button>
+            <button class="key-pos" data-key="ARMED">ARMED</button>
+          </div>
+          <div class="key-hint" id="keyHint">Valves &amp; glow plug isolated in hardware.</div>
+        </div>
+
+        <!-- Hardware Indicator Lamps + Valve Bus Voltmeter -->
+        <div class="lamps-grid lamps-2">
+          <div class="lamp-item">
+            <span class="led led-green on" id="ledSafe"></span>
+            <div>
+              <div class="lamp-name">SAFE</div>
+              <div class="lamp-sub">Relay NC</div>
+            </div>
+          </div>
+          <div class="lamp-item">
+            <span class="led led-amber" id="ledArmed"></span>
+            <div>
+              <div class="lamp-name">ARMED</div>
+              <div class="lamp-sub">Valve Bus</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-jacks">
+          <span class="tj-label">Valve Bus Test Jacks</span>
+          <span class="tj-meter" id="valTestJacks">0.00 V DC</span>
+        </div>
+
+        <!-- 3 Clear Pushbuttons: START, E-STOP, RESET -->
+        <div class="btn-stack">
+          <button id="btnStart" class="btn btn-start" disabled>START SEQUENCE</button>
+          <div class="inhibit-line" id="startInhibit">Turn ARM key to ARMED</div>
+
+          <div class="btn-row-2">
+            <button id="btnEstop" class="btn btn-estop">E-STOP</button>
+            <button id="btnReset" class="btn btn-secondary">RESET</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Minimal HMI Timing Settings (R8: Locked when ARMED) -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Sequence Timing</h2>
+          <span class="lock-badge" id="hmiLockBadge">EDITABLE</span>
+        </div>
+
+        <div class="param-list">
+          <div class="param-row">
+            <label for="inT1">t1 &middot; GP Heat</label>
+            <div class="param-input-wrap">
+              <input id="inT1" type="number" min="1" max="30" step="0.5" value="2.5" />
+              <span>s</span>
+            </div>
+          </div>
+          <div class="param-row">
+            <label for="inT2">t2 &middot; GOX Lead</label>
+            <div class="param-input-wrap">
+              <input id="inT2" type="number" min="0" max="500" step="10" value="100" />
+              <span>ms</span>
+            </div>
+          </div>
+          <div class="param-row">
+            <label for="inT3">t3 &middot; Burn</label>
+            <div class="param-input-wrap">
+              <input id="inT3" type="number" min="0.1" max="5.0" step="0.1" value="2.0" />
+              <span>s</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- MAIN RIGHT SINGLE-PAGE STREAM (SECTIONS 1, 2, 3) -->
+    <main class="stage single-page">
+      <!-- ==================== SECTION 1: LIVE TEST BENCH ==================== -->
+      <section id="secBench" class="page-section">
+        <!-- 1-Click Run Scenarios -->
+        <div class="panel scenario-bar">
+          <div class="scenario-top">
+            <span class="scenario-label">1-Click Demo</span>
+            <div id="scenarioPills" class="scenario-pills"></div>
+          </div>
+        </div>
+
+        <!-- Active Abort / No-Go Alert Banner -->
+        <div id="alertBanner" class="alert-banner hidden"></div>
+
+        <!-- Live Interactive P&ID -->
+        <div class="panel pid-panel">
+          <div class="panel-head">
+            <h2>1. Live P&amp;ID <span class="head-note">(hover any numbered balloon for tag &amp; signal)</span></h2>
+            <div class="pid-legend">
+              <span><i class="swatch sw-ch4"></i>CH<sub>4</sub></span>
+              <span><i class="swatch sw-gox"></i>GOX</span>
+              <span><i class="swatch sw-plc"></i>PLC 1 kHz</span>
+              <span><i class="swatch sw-bn"></i>Report Item #</span>
+            </div>
+          </div>
+          <div id="pidContainer"></div>
+        </div>
+
+        <!-- 1 kHz Scope + Post-Run Interactive Scrubber -->
+        <div class="panel scope-panel">
+          <div class="panel-head">
+            <h2 id="scopeTitle">1 kHz Telemetry <span class="head-note" id="scopeHint"></span></h2>
+            <div class="scope-legend">
+              <span><i class="line-sw" style="background:#C0181F"></i>Pc <b id="legPc">1.00</b> bar</span>
+              <span><i class="line-sw" style="background:#1F4E79"></i>Pox <b id="legPox">1.0</b> bar</span>
+              <span><i class="line-sw" style="background:#0D8A7B"></i>Pf <b id="legPf">1.0</b> bar</span>
+              <span><i class="line-sw" style="background:#B36B00"></i>GP <b id="legGp">0</b> W</span>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-live">
+            <canvas id="liveScopeCanvas"></canvas>
+          </div>
+          <div id="scrubBar" class="scrub-bar hidden">
+            <button id="btnScrubPlay" class="scrub-play-btn" title="Play / Pause replay">&#9654;</button>
+            <input id="scrubSlider" type="range" min="0" max="100" value="100" class="scrub-slider" aria-label="Scrub run timeline" />
+            <span id="scrubTime" class="scrub-time">t = 0.000 s</span>
+            <span class="scrub-note">Drag curve or slider to replay all diagrams</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SECTION 2: SEQUENCE STATE MACHINE & LOGIC TIMING ==================== -->
+      <section id="secStates" class="page-section">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>2. Sequence State Machine &amp; Logic Timing <span class="head-note">(tracks live &amp; scrub)</span></h2>
+            <span class="state-inline-pill" id="statesActivePill">STATE: SAFE</span>
+          </div>
+          <div id="statesContainer"></div>
+          <div class="timing-subhead">
+            <span>Digital Logic Timing (1 kHz)</span>
+            <span class="head-note" id="timingHint">Drag across waveform after run to scrub</span>
+          </div>
+          <div class="canvas-wrap canvas-timing">
+            <canvas id="timingCanvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SECTION 3: HARDWARE ISOLATION ==================== -->
+      <section id="secIsolation" class="page-section">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>3. Hardwired Safety Chain &amp; Isolation <span class="head-note">(Report Figure 6 &mdash; tracks live &amp; scrub)</span></h2>
+            <span class="iso-status-pill" id="isoSummaryPill">VALVE BUS: 0.00 V (ISOLATED)</span>
+          </div>
+          <div id="isoContainer"></div>
+          <div id="scrubBarIso" class="scrub-bar hidden">
+            <button id="btnScrubPlayIso" class="scrub-play-btn" title="Play / Pause replay">&#9654;</button>
+            <input id="scrubSliderIso" type="range" min="0" max="100" value="100" class="scrub-slider" aria-label="Scrub state machine and safety chain" />
+            <span id="scrubTimeIso" class="scrub-time">t = 0.000 s</span>
+            <span class="scrub-note">Synced scrubber (State Machine + Safety Chain)</span>
+          </div>
+          <div class="fault-cards fault-cards-2 fault-cards-inline">
+            <label class="fault-card">
+              <div class="fc-head">
+                <input type="checkbox" id="chkWeldRelay" />
+                <strong>Simulate Welded Arming Relay Contact</strong>
+              </div>
+              <p>Forces +24 V contact closed. Force-guided NC feedback stays open &rarr; Green SAFE lamp stays OFF and PLC blocks start.</p>
+            </label>
+
+            <label class="fault-card">
+              <div class="fc-head">
+                <input type="checkbox" id="chkShortSsr" />
+                <strong>Simulate DC SSR Failed Shorted</strong>
+              </div>
+              <p>In SAFE, the upstream mechanical contactor remains open &rarr; Glow plug stays completely isolated at 0 W.</p>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SECTION 4: POST-RUN ANALYSIS ==================== -->
+      <section id="secReport" class="page-section">
+        <div id="reportEmpty" class="panel empty-report">
+          <h3>4. Post-Run Analysis</h3>
+          <p>Run any 1-Click Demo above (~6 seconds) to populate the automated quick-look metrics, PLC/NI time-sync alignment, FFT spectrum, and sequence event log.</p>
+        </div>
+
+        <div id="reportContent" class="report-stack hidden">
+          <div class="panel report-header-card">
+            <div>
+              <div class="rep-folder-row">
+                <span class="toast-tag" id="repOutcome">NOMINAL</span>
+                <h2 id="repFolder" class="mono">4. Post-Run Analysis &mdash; RUN_0001</h2>
+              </div>
+              <p class="rep-sub" id="repSubtitle">Auto-generated quick-look summary (PLC 1 kHz + NI cDAQ aligned via 1 Hz sync pulse)</p>
+            </div>
+          </div>
+
+          <!-- 4 Core KPI Cards -->
+          <div class="kpi-grid kpi-4" id="kpiGrid"></div>
+
+          <!-- Sync Alignment & FFT Plots -->
+          <div class="report-charts-grid">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>PLC vs. NI cDAQ Time Sync</h2>
+                <div class="sync-toggle">
+                  <button class="seg-sm active" id="btnSyncAligned">Sync-Aligned</button>
+                  <button class="seg-sm" id="btnSyncRaw">Raw NI Clock</button>
+                </div>
+              </div>
+              <p class="chart-caption" id="syncCaption">1 Hz EL2252 sync pulses align NI cDAQ (green) to PLC Pc (red) within &lt; 0.2 ms.</p>
+              <div class="canvas-wrap canvas-md">
+                <canvas id="syncCanvas"></canvas>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Burn Chamber Pressure FFT</h2>
+                <span class="head-note">30–500 Hz acoustic band</span>
+              </div>
+              <p class="chart-caption">Combustion acoustic modes during steady blowdown.</p>
+              <div class="canvas-wrap canvas-md">
+                <canvas id="fftCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compact Event Log -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Sequence Event Log (<code>events.csv</code>)</h2>
+            </div>
+            <div class="log-table-wrap">
+              <table class="data-table" id="eventsTable">
+                <thead><tr><th>t_run (s)</th><th>State</th><th>Event</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  </div><!-- /#appRoot -->
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
