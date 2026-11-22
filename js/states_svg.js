@@ -31,12 +31,13 @@ export function renderStatesSvg(container) {
       <text x="331" y="59" text-anchor="middle" class="st-lbl">countdown</text>
       <text x="331" y="70" text-anchor="middle" class="st-lbl">done</text>
 
-      <line id="trGp" x1="478" y1="78" x2="540" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
-      <text x="509" y="59" text-anchor="middle" class="st-lbl">t1 done,</text>
-      <text x="509" y="70" text-anchor="middle" class="st-lbl">power OK</text>
+      <line id="trGp" x1="478" y1="78" x2="538" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
+      <text x="508" y="59" text-anchor="middle" class="st-lbl">t1 done,</text>
+      <text x="508" y="70" text-anchor="middle" class="st-lbl">power OK</text>
 
-      <line id="trOx" x1="654" y1="78" x2="710" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
-      <text x="682" y="70" text-anchor="middle" class="st-lbl">t2 done</text>
+      <line id="trOx" x1="656" y1="78" x2="710" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
+      <text x="683" y="59" text-anchor="middle" class="st-lbl">t2 done,</text>
+      <text x="683" y="70" text-anchor="middle" class="st-lbl">GP OK</text>
 
       <line id="trIgn" x1="824" y1="78" x2="880" y2="78" stroke="#243040" stroke-width="1.8" marker-end="url(#stArr)"/>
       <text x="852" y="59" text-anchor="middle" class="st-lbl">ignition</text>
@@ -85,9 +86,9 @@ export function renderStatesSvg(container) {
       </g>
 
       <g class="st-node" id="stBox_OX_OPEN">
-        <rect x="542" y="52" width="112" height="52" rx="8" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.6"/>
+        <rect x="540" y="52" width="116" height="52" rx="8" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.6"/>
         <text x="598" y="73" text-anchor="middle" class="st-title" fill="#1A2330">OX_OPEN</text>
-        <text x="598" y="90" text-anchor="middle" class="st-sub" fill="#475569">GOX valve open</text>
+        <text x="598" y="90" text-anchor="middle" class="st-sub" fill="#475569">GOX open, GP cont. OK</text>
       </g>
 
       <g class="st-node" id="stBox_IGN_WAIT">

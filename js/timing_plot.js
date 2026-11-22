@@ -1,7 +1,7 @@
 // High-DPI Interactive Logic Timing Diagram (WaveDrom-inspired, mirrors Report Section 12b)
 import { ABORT_LIMITS } from './config.js';
 
-const PAD = { l: 178, r: 18, t: 14, b: 22 };
+const PAD = { l: 184, r: 18, t: 14, b: 22 };
 
 const STATE_STYLES = {
   SAFE:      { fill: '#E2F2E2', stroke: '#1E7B34', text: '#1E7B34' },
@@ -30,7 +30,7 @@ const ROWS = [
   { label: 'Glow plug (SSR)',      type: 'bit', color: '#B36B00', get: (s) => (s.gpCmd ? 1 : 0) },
   { label: 'GOX valve SV-201',     type: 'bit', color: '#1F4E79', get: (s) => (s.sv201Cmd ? 1 : 0) },
   { label: 'CH4 valve SV-101',     type: 'bit', color: '#0D8A7B', get: (s) => (s.sv101Cmd ? 1 : 0) },
-  { label: 'GP power OK (at T0)',  type: 'bit', color: '#1E7B34', get: (s) => (s.gpOk ? 1 : 0) },
+  { label: 'GP power / continuity OK', type: 'bit', color: '#1E7B34', get: (s) => (s.gpOk ? 1 : 0) },
   { label: 'Pc > P_ign (3.5 bar)', type: 'bit', color: '#C2410C', get: (s) => (s.pt301 > ABORT_LIMITS.pIgnBar ? 1 : 0) },
   { label: 'ABORT (latched)',      type: 'bit', color: '#B3261E', get: (s) => (s.abort ? 1 : 0) },
 ];

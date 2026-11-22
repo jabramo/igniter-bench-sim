@@ -29,7 +29,7 @@ export function renderIsolationSvg(container) {
       <!-- Boxes rail 1 -->
       <rect x="16" y="40" width="130" height="48" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
       <text x="81" y="61" text-anchor="middle" class="iso-box-title">+24 V</text>
-      <text x="81" y="76" text-anchor="middle" class="iso-box-sub">field supply</text>
+      <text x="81" y="76" text-anchor="middle" class="iso-box-sub">backed-up supply</text>
 
       <rect id="boxEstop" x="182" y="40" width="140" height="48" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
       <text x="252" y="61" text-anchor="middle" class="iso-box-title">E-STOP</text>
@@ -58,7 +58,7 @@ export function renderIsolationSvg(container) {
       <text x="532" y="141" text-anchor="middle" class="iso-dash-lbl">2-pole force-guided: coil drives both contacts + NC feedback together</text>
 
       <!-- Mechanical dashed link from GP contactor coil to GP contactor -->
-      <path d="M 930 38 L 1032 38 L 1032 426 L 252 426 L 252 398" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
+      <path d="M 930 38 L 1032 38 L 1032 426 L 252 426 L 252 402" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
       <text x="952" y="420" text-anchor="end" class="iso-dash-lbl">coil switches glow plug contactor</text>
 
       <!-- ===== RAIL 2: VALVE POWER (2-POLE FORCE-GUIDED) ===== -->
@@ -105,9 +105,10 @@ export function renderIsolationSvg(container) {
       <text x="963" y="213" text-anchor="middle" class="iso-box-sub">24 V return</text>
 
       <!-- Indicator boxes: AMBER ARMED & GREEN SAFE -->
-      <rect id="boxArmedLamp" x="358" y="258" width="214" height="52" rx="6" fill="#F8FAFC" stroke="#9AA5B4" stroke-width="1.5"/>
-      <text id="ttlArmedLamp" x="465" y="279" text-anchor="middle" class="iso-box-title">AMBER "ARMED" lamp + Test Jacks</text>
-      <text id="subArmedLamp" x="465" y="295" text-anchor="middle" class="iso-box-sub">OFF · Test Jacks = 0.00 V DC</text>
+      <rect id="boxArmedLamp" x="358" y="256" width="274" height="58" rx="6" fill="#F8FAFC" stroke="#9AA5B4" stroke-width="1.5"/>
+      <text id="ttlArmedLamp" x="495" y="274" text-anchor="middle" class="iso-box-title">AMBER "ARMED" lamp + Test Jacks</text>
+      <text id="subArmedOpto" x="495" y="289" text-anchor="middle" class="iso-box-sub">+ PLC input via optocoupler</text>
+      <text id="subArmedLamp" x="495" y="304" text-anchor="middle" class="iso-box-sub">OFF · Test Jacks = 0.00 V DC</text>
 
       <rect id="boxSafeLamp" x="698" y="258" width="214" height="52" rx="6" fill="#E2F2E2" stroke="#1E7B34" stroke-width="1.8"/>
       <text id="ttlSafeLamp" x="805" y="279" text-anchor="middle" class="iso-box-title" fill="#1E7B34">GREEN "SAFE" lamp + PLC input</text>
@@ -121,25 +122,28 @@ export function renderIsolationSvg(container) {
       <line id="wGp3" x1="498" y1="374" x2="532" y2="374" stroke="#9AA5B4" stroke-width="2.6" marker-end="url(#arrMuted)"/>
       <line id="wGp4" x1="696" y1="374" x2="730" y2="374" stroke="#9AA5B4" stroke-width="2.6" marker-end="url(#arrMuted)"/>
 
-      <rect x="16" y="348" width="130" height="50" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
-      <text x="81" y="369" text-anchor="middle" class="iso-box-title">GP Supply (14)</text>
-      <text id="subIsoPsu" x="81" y="384" text-anchor="middle" class="iso-box-sub">Set 24.0 V · V read (16)</text>
+      <rect x="16" y="346" width="130" height="56" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
+      <text x="81" y="364" text-anchor="middle" class="iso-box-title">GP Supply (14)</text>
+      <text x="81" y="378" text-anchor="middle" class="iso-box-sub">9.6–24 V (PLC PV)</text>
+      <text id="subIsoPsu" x="81" y="392" text-anchor="middle" class="iso-box-sub">Set 24.0 V</text>
 
-      <rect id="boxGpCont" x="182" y="348" width="140" height="50" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
+      <rect id="boxGpCont" x="182" y="346" width="140" height="56" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
       <text x="252" y="369" text-anchor="middle" class="iso-box-title">GP Contactor</text>
-      <text id="subGpCont" x="252" y="384" text-anchor="middle" class="iso-box-sub">OPEN (Isolated)</text>
+      <text id="subGpCont" x="252" y="385" text-anchor="middle" class="iso-box-sub">OPEN (Isolated)</text>
 
-      <rect id="boxGpSsr" x="358" y="348" width="140" height="50" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
+      <rect id="boxGpSsr" x="358" y="346" width="140" height="56" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
       <text x="428" y="369" text-anchor="middle" class="iso-box-title">DC SSR (17)</text>
-      <text id="subGpSsr" x="428" y="384" text-anchor="middle" class="iso-box-sub">PLC timing · OFF</text>
+      <text id="subGpSsr" x="428" y="385" text-anchor="middle" class="iso-box-sub">PLC timing · OFF</text>
 
-      <rect x="534" y="348" width="162" height="50" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
-      <text x="615" y="369" text-anchor="middle" class="iso-box-title">Hall Sensor (15)</text>
-      <text id="subIsoHall" x="615" y="384" text-anchor="middle" class="iso-box-sub">0.0 A DC (isolated)</text>
+      <rect x="534" y="346" width="162" height="56" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
+      <text x="615" y="364" text-anchor="middle" class="iso-box-title">Hall Sensor (15)</text>
+      <text x="615" y="378" text-anchor="middle" class="iso-box-sub">24 V, 0–10 V out</text>
+      <text id="subIsoHall" x="615" y="392" text-anchor="middle" class="iso-box-sub">0.0 A DC (isolated)</text>
 
-      <rect id="boxIsoGp" x="732" y="348" width="144" height="50" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
-      <text x="804" y="369" text-anchor="middle" class="iso-box-title">Glow Plug (13)</text>
-      <text id="subIsoGp" x="804" y="384" text-anchor="middle" class="iso-box-sub">0.0 W · Cold</text>
+      <rect id="boxIsoGp" x="732" y="346" width="166" height="56" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
+      <text x="815" y="364" text-anchor="middle" class="iso-box-title">Glow Plug (13)</text>
+      <text x="815" y="378" text-anchor="middle" class="iso-box-sub">Kelvin V sense (16)</text>
+      <text id="subIsoGp" x="815" y="392" text-anchor="middle" class="iso-box-sub">0.0 W · Cold</text>
     </svg>
   </div>
   `;
@@ -213,12 +217,14 @@ export function updateIsolationSvg(snap) {
     $('boxArmedLamp').setAttribute('fill', '#FFF4C2');
     $('boxArmedLamp').setAttribute('stroke', '#B36B00');
     $('ttlArmedLamp').setAttribute('fill', '#8A5200');
+    $('subArmedOpto').setAttribute('fill', '#8A5200');
     $('subArmedLamp').textContent = `LIT · Test Jacks = ${hw.valveBusVoltage.toFixed(2)} V DC`;
     $('subArmedLamp').setAttribute('fill', '#8A5200');
   } else {
     $('boxArmedLamp').setAttribute('fill', '#F8FAFC');
     $('boxArmedLamp').setAttribute('stroke', '#9AA5B4');
     $('ttlArmedLamp').setAttribute('fill', '#5A6675');
+    $('subArmedOpto').setAttribute('fill', '#5A6675');
     $('subArmedLamp').textContent = 'OFF · Test Jacks = 0.00 V DC';
     $('subArmedLamp').setAttribute('fill', '#5A6675');
   }
@@ -247,7 +253,7 @@ export function updateIsolationSvg(snap) {
   setWire('wGp3', snap.gpActuallyPowered, true);
   setWire('wGp4', snap.gpActuallyPowered, true);
 
-  $('subIsoPsu').textContent = `Set ${snap.settings.vGp.toFixed(1)} V · V read (16)`;
+  $('subIsoPsu').textContent = `Set ${snap.settings.vGp.toFixed(1)} V`;
   $('subGpCont').textContent = hw.gpContactorClosed ? 'CLOSED (ARMED)' : 'OPEN (Isolated!)';
   $('boxGpCont').setAttribute('fill', hw.gpContactorClosed ? '#FFF4C2' : '#DCE9F7');
 
