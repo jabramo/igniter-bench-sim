@@ -577,9 +577,11 @@ export class IgniterBenchSim {
 
   _updateHardwareChain() {
     const safetyRelayOk = !this.estopPressed && !this.estopLatched;
-    // SAFE: both off | ARMED: both 2-pole valve arming relay and glow plug contactor energized
-    const gpContactorCoil = safetyRelayOk && this.keyPos === KEY_POS.ARMED;
-    const armingRelayCoil = safetyRelayOk && this.keyPos === KEY_POS.ARMED;
+    // PLC permit relay sits in series with both coils: drops on any abort, can never grant power on its own (Section 10.2)
+    const plcPermitClosed = !this.abortLatched;
+    // SAFE: both off | ARMED + safety relay OK + PLC permit OK: both coils energized
+    const gpContactorCoil = safetyRelayOk && this.keyPos === KEY_POS.ARMED && plcPermitClosed;
+    const armingRelayCoil = safetyRelayOk && this.keyPos === KEY_POS.ARMED && plcPermitClosed;
 
     // 2-pole force-guided arming relay (Section 10.2 & 10.5)
     const contact1Closed = armingRelayCoil || this.hwFaults.weldedRelay; // +24 V side
@@ -592,9 +594,10 @@ export class IgniterBenchSim {
     const safeLampOn = safeFeedbackClosed;
     const armedLampOn = valveBusVoltage > 18.0;
 
-    // PLC cross-check: key, relay feedback, and bus voltage must agree
+    // PLC cross-check: key, permit, relay feedback, and bus voltage must agree
+    const expectArmed = this.keyPos === KEY_POS.ARMED && safetyRelayOk && plcPermitClosed;
     let plcRelayAgree = true;
-    if (this.keyPos === KEY_POS.ARMED) {
+    if (expectArmed) {
       plcRelayAgree = !safeFeedbackClosed && armedLampOn;
     } else {
       plcRelayAgree = safeFeedbackClosed && !armedLampOn;
@@ -602,6 +605,7 @@ export class IgniterBenchSim {
 
     this.hw = {
       safetyRelayOk,
+      plcPermitClosed,
       gpContactorCoil,
       gpContactorClosed: gpContactorCoil,
       armingRelayCoil,
@@ -964,6 +968,7 @@ export class IgniterBenchSim {
     this.abortReason = reason;
     this.seqCmd = { gox: false, ch4: false, gp: false };
     this.outCmd = { gox: false, ch4: false, gp: false };
+    this._updateHardwareChain();
     this._enterState(STATES.ABORT);
     if (this.currentRunData) {
       this.currentRunData.outcome = 'ABORT';

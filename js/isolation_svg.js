@@ -17,48 +17,54 @@ export function renderIsolationSvg(container) {
       </defs>
 
       <!-- ===== RAIL 1: CONTROL CHAIN (24 V) ===== -->
-      <text x="16" y="20" class="iso-rail-title">1. Control chain (24 V) — Hardware only, no PLC override</text>
+      <text x="16" y="20" class="iso-rail-title">1. Control chain (24 V) — Hardware arming + PLC permit relay (drops on abort, can't arm)</text>
 
       <!-- Wires rail 1 -->
-      <line id="wCtl1" x1="146" y1="64" x2="180" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
-      <line id="wCtl2" x1="322" y1="64" x2="356" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
-      <line id="wCtl3" x1="498" y1="64" x2="532" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
-      <path id="wCtlGp" d="M 674 64 L 704 64 L 704 38 L 732 38" fill="none" stroke="#9AA5B4" stroke-width="2" marker-end="url(#arrMuted)"/>
-      <path id="wCtlArm" d="M 674 64 L 704 64 L 704 94 L 732 94" fill="none" stroke="#9AA5B4" stroke-width="2" marker-end="url(#arrMuted)"/>
+      <line id="wCtl1" x1="132" y1="64" x2="156" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
+      <line id="wCtl2" x1="286" y1="64" x2="310" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
+      <line id="wCtl3" x1="434" y1="64" x2="458" y2="64" stroke="#243040" stroke-width="2" marker-end="url(#arrDark)"/>
+      <line id="wCtl4" x1="576" y1="64" x2="600" y2="64" stroke="#9AA5B4" stroke-width="2" marker-end="url(#arrMuted)"/>
+      <path id="wCtlGp" d="M 752 64 L 772 64 L 772 38 L 792 38" fill="none" stroke="#9AA5B4" stroke-width="2" marker-end="url(#arrMuted)"/>
+      <path id="wCtlArm" d="M 752 64 L 772 64 L 772 94 L 792 94" fill="none" stroke="#9AA5B4" stroke-width="2" marker-end="url(#arrMuted)"/>
 
       <!-- Boxes rail 1 -->
-      <rect x="16" y="40" width="130" height="48" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
-      <text x="81" y="61" text-anchor="middle" class="iso-box-title">+24 V</text>
-      <text x="81" y="76" text-anchor="middle" class="iso-box-sub">backed-up supply</text>
+      <rect x="16" y="38" width="116" height="52" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
+      <text x="74" y="60" text-anchor="middle" class="iso-box-title">+24 V</text>
+      <text x="74" y="75" text-anchor="middle" class="iso-box-sub">backed-up supply</text>
 
-      <rect id="boxEstop" x="182" y="40" width="140" height="48" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
-      <text x="252" y="61" text-anchor="middle" class="iso-box-title">E-STOP</text>
-      <text id="subEstop" x="252" y="76" text-anchor="middle" class="iso-box-sub">2-ch NC · CLOSED</text>
+      <rect id="boxEstop" x="158" y="38" width="128" height="52" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
+      <text x="222" y="60" text-anchor="middle" class="iso-box-title">E-STOP</text>
+      <text id="subEstop" x="222" y="75" text-anchor="middle" class="iso-box-sub">2-ch NC · CLOSED</text>
 
-      <rect id="boxSafRelay" x="358" y="40" width="140" height="48" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
-      <text x="428" y="61" text-anchor="middle" class="iso-box-title">Safety relay</text>
-      <text id="subSafRelay" x="428" y="76" text-anchor="middle" class="iso-box-sub">OK (energized)</text>
+      <rect id="boxSafRelay" x="312" y="38" width="122" height="52" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
+      <text x="373" y="60" text-anchor="middle" class="iso-box-title">Safety relay</text>
+      <text id="subSafRelay" x="373" y="75" text-anchor="middle" class="iso-box-sub">OK (energized)</text>
 
-      <rect id="boxKey" x="534" y="40" width="140" height="48" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
-      <text x="604" y="61" text-anchor="middle" class="iso-box-title">ARM key</text>
-      <text id="subKey" x="604" y="76" text-anchor="middle" class="iso-box-sub">Position: SAFE</text>
+      <rect id="boxKey" x="460" y="38" width="116" height="52" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
+      <text x="518" y="60" text-anchor="middle" class="iso-box-title">ARM key</text>
+      <text id="subKey" x="518" y="75" text-anchor="middle" class="iso-box-sub">Position: SAFE</text>
 
-      <rect id="boxGpCoil" x="734" y="16" width="196" height="44" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
-      <text x="832" y="35" text-anchor="middle" class="iso-box-title">Glow plug contactor coil</text>
-      <text id="subGpCoil" x="832" y="49" text-anchor="middle" class="iso-box-sub">OFF (ARMED only)</text>
+      <rect id="boxPlcPermit" x="602" y="38" width="150" height="52" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
+      <text x="677" y="54" text-anchor="middle" class="iso-box-title">PLC permit relay</text>
+      <text x="677" y="68" text-anchor="middle" class="iso-box-sub">drops on abort, can't arm</text>
+      <text id="subPlcPermit" x="677" y="81" text-anchor="middle" class="iso-box-sub">CLOSED (OK)</text>
 
-      <rect id="boxArmCoil" x="734" y="72" width="196" height="44" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
-      <text x="832" y="91" text-anchor="middle" class="iso-box-title">Valve arming relay coil</text>
-      <text id="subArmCoil" x="832" y="105" text-anchor="middle" class="iso-box-sub">OFF (ARMED only)</text>
+      <rect id="boxGpCoil" x="794" y="16" width="200" height="44" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
+      <text x="894" y="35" text-anchor="middle" class="iso-box-title">Glow plug contactor coil</text>
+      <text id="subGpCoil" x="894" y="49" text-anchor="middle" class="iso-box-sub">OFF (ARMED only)</text>
+
+      <rect id="boxArmCoil" x="794" y="72" width="200" height="44" rx="6" fill="#FBE3D6" stroke="#243040" stroke-width="1.5"/>
+      <text x="894" y="91" text-anchor="middle" class="iso-box-title">Valve arming relay coil</text>
+      <text id="subArmCoil" x="894" y="105" text-anchor="middle" class="iso-box-sub">OFF (ARMED only)</text>
 
       <!-- Mechanical dashed links from coils -->
-      <path d="M 832 116 L 832 142 L 252 142 L 252 174" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
+      <path d="M 894 116 L 894 142 L 252 142 L 252 174" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
       <line x1="804" y1="142" x2="804" y2="174" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
       <rect x="372" y="131" width="320" height="14" fill="#FFFFFF"/>
       <text x="532" y="141" text-anchor="middle" class="iso-dash-lbl">2-pole force-guided: coil drives both contacts + NC feedback together</text>
 
       <!-- Mechanical dashed link from GP contactor coil to GP contactor -->
-      <path d="M 930 38 L 1032 38 L 1032 426 L 252 426 L 252 402" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
+      <path d="M 994 38 L 1032 38 L 1032 426 L 252 426 L 252 402" fill="none" stroke="#8C99A8" stroke-width="1.3" stroke-dasharray="5 4"/>
       <text x="952" y="420" text-anchor="end" class="iso-dash-lbl">coil switches glow plug contactor</text>
 
       <!-- ===== RAIL 2: VALVE POWER (2-POLE FORCE-GUIDED) ===== -->
@@ -124,7 +130,7 @@ export function renderIsolationSvg(container) {
 
       <rect x="16" y="346" width="130" height="56" rx="6" fill="#FFFFFF" stroke="#243040" stroke-width="1.5"/>
       <text x="81" y="364" text-anchor="middle" class="iso-box-title">GP Supply (14)</text>
-      <text x="81" y="378" text-anchor="middle" class="iso-box-sub">9.6–24 V (PLC PV)</text>
+      <text x="81" y="378" text-anchor="middle" class="iso-box-sub">9.6–26.4 V (PLC PV)</text>
       <text id="subIsoPsu" x="81" y="392" text-anchor="middle" class="iso-box-sub">Set 24.0 V</text>
 
       <rect id="boxGpCont" x="182" y="346" width="140" height="56" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
@@ -132,13 +138,14 @@ export function renderIsolationSvg(container) {
       <text id="subGpCont" x="252" y="385" text-anchor="middle" class="iso-box-sub">OPEN (Isolated)</text>
 
       <rect id="boxGpSsr" x="358" y="346" width="140" height="56" rx="6" fill="#DCE9F7" stroke="#1F4E79" stroke-width="1.5"/>
-      <text x="428" y="369" text-anchor="middle" class="iso-box-title">DC SSR (17)</text>
-      <text id="subGpSsr" x="428" y="385" text-anchor="middle" class="iso-box-sub">PLC timing · OFF</text>
+      <text x="428" y="364" text-anchor="middle" class="iso-box-title">DC SSR (17)</text>
+      <text x="428" y="378" text-anchor="middle" class="iso-box-sub">+ heatsink (PLC)</text>
+      <text id="subGpSsr" x="428" y="392" text-anchor="middle" class="iso-box-sub">OFF</text>
 
       <rect x="534" y="346" width="162" height="56" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
-      <text x="615" y="364" text-anchor="middle" class="iso-box-title">Hall Sensor (15)</text>
-      <text x="615" y="378" text-anchor="middle" class="iso-box-sub">24 V, 0–10 V out</text>
-      <text id="subIsoHall" x="615" y="392" text-anchor="middle" class="iso-box-sub">0.0 A DC (isolated)</text>
+      <text x="615" y="364" text-anchor="middle" class="iso-box-title">Current sensor (15)</text>
+      <text x="615" y="378" text-anchor="middle" class="iso-box-sub">wire passes through</text>
+      <text id="subIsoHall" x="615" y="392" text-anchor="middle" class="iso-box-sub">0.0 A · 0–10 V out</text>
 
       <rect id="boxIsoGp" x="732" y="346" width="166" height="56" rx="6" fill="#F2F2F2" stroke="#243040" stroke-width="1.5"/>
       <text x="815" y="364" text-anchor="middle" class="iso-box-title">Glow Plug (13)</text>
@@ -170,6 +177,7 @@ export function updateIsolationSvg(snap) {
   setWire('wCtl1', true, false);
   setWire('wCtl2', !snap.estopPressed, false);
   setWire('wCtl3', hw.safetyRelayOk, false);
+  setWire('wCtl4', hw.safetyRelayOk && snap.keyPos === 'ARMED', false);
   setWire('wCtlGp', hw.gpContactorCoil, false);
   setWire('wCtlArm', hw.armingRelayCoil, false);
 
@@ -177,11 +185,14 @@ export function updateIsolationSvg(snap) {
   $('boxEstop').setAttribute('fill', snap.estopPressed ? '#FDECEC' : '#FBE3D6');
   $('boxEstop').setAttribute('stroke', snap.estopPressed ? '#B3261E' : '#243040');
 
-  $('subSafRelay').textContent = hw.safetyRelayOk ? 'OK (energized)' : (snap.estopPressed ? 'TRIPPED' : 'NEEDS MANUAL RESET');
+  $('subSafRelay').textContent = hw.safetyRelayOk ? 'OK (energized)' : (snap.estopPressed ? 'TRIPPED' : 'MANUAL RESET');
   $('boxSafRelay').setAttribute('fill', hw.safetyRelayOk ? '#FBE3D6' : '#FDECEC');
-  $('subKey').textContent = `Position: ${snap.keyPos}${snap.keyRemoved ? ' (Removed)' : ''}`;
-  $('subGpCoil').textContent = hw.gpContactorCoil ? 'ENERGIZED (24 V)' : 'OFF (ARMED only)';
-  $('subArmCoil').textContent = hw.armingRelayCoil ? 'ENERGIZED (24 V)' : 'OFF (ARMED only)';
+  $('subKey').textContent = `${snap.keyPos}${snap.keyRemoved ? ' (Removed)' : ''}`;
+  $('subPlcPermit').textContent = hw.plcPermitClosed ? 'CLOSED (OK)' : 'OPEN (ABORT!)';
+  $('boxPlcPermit').setAttribute('fill', hw.plcPermitClosed ? '#DCE9F7' : '#FDECEC');
+  $('boxPlcPermit').setAttribute('stroke', hw.plcPermitClosed ? '#1F4E79' : '#B3261E');
+  $('subGpCoil').textContent = hw.gpContactorCoil ? 'ENERGIZED (24 V)' : 'OFF (ARMED + permit)';
+  $('subArmCoil').textContent = hw.armingRelayCoil ? 'ENERGIZED (24 V)' : 'OFF (ARMED + permit)';
 
   // Rail 2: Valve power
   setWire('wVal1', true, true);
@@ -263,7 +274,7 @@ export function updateIsolationSvg(snap) {
   $('boxGpSsr').setAttribute('fill', snap.hwFaults.shortedSsr ? '#FDECEC' : (ssrOn ? '#FFF4C2' : '#DCE9F7'));
   $('boxGpSsr').setAttribute('stroke', snap.hwFaults.shortedSsr ? '#B3261E' : '#1F4E79');
 
-  $('subIsoHall').textContent = `${snap.gpI.toFixed(1)} A DC (isolated)`;
+  $('subIsoHall').textContent = `${snap.gpI.toFixed(1)} A · 0–10 V out`;
   $('subIsoGp').textContent = snap.gpActuallyPowered
     ? `${snap.gpPAvg.toFixed(0)} W · ENERGIZED`
     : (snap.hwFaults.shortedSsr ? '0.0 W · Saved by contactor!' : '0.0 W · Isolated');
